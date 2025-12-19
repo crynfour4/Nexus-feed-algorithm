@@ -1,0 +1,98 @@
+generator client {
+  provider = "prisma-client" 
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  DECLINED
+}
+
+model User {
+  id               Int            @id @default(autoincrement())
+  username         String         @unique
+  firstName        String
+  lastName         String
+  email            String         @unique
+  password         String
+  dateOfBirth      DateTime
+  photos           Image[]        @relation("UserGallery")
+  profilePicture   Image?         @relation("ProfilePic", fields: [profilePicId], references: [id])
+  profilePicId     Int?           @unique 
+  notifications    Notification[]
+  sentRequests     Friend[]       @relation("SentRequests")
+  receivedRequests Friend[]       @relation("ReceivedRequests")
+  posts            Post[]
+  comments         Comment[]
+  groups           Group[]        @relation("UserToGroup")
+}
+
+model Image {
+  id           Int    @id @default(autoincrement())
+  url          String
+  user         User?  @relation("UserGallery", fields: [userId], references: [id])
+  userId       Int?
+  asProfilePic User?  @relation("ProfilePic")
+  groupCover   Group? @relation("GroupCover") 
+  post Post? @relation(fields: [postId], references: [id])
+  postId Int
+}
+
+model Notification {
+  id          Int      @id @default(autoincrement())
+  description String
+  receivedAt        DateTime @default(now())
+  senderId    Int 
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
+}
+
+model Friend {
+  id         Int          @id @default(autoincrement())
+  createdAt  DateTime     @default(now())
+  status     FriendStatus @default(PENDING)
+  sender     User         @relation("SentRequests", fields: [senderId], references: [id]) 
+  senderId   Int
+  receiver   User         @relation("ReceivedRequests", fields: [receiverId], references: [id]) 
+  receiverId Int
+
+  @@unique([senderId, receiverId])
+}
+
+model Post {
+  id          Int       @id @default(autoincrement())
+  publishDate DateTime  @default(now())
+  author      User      @relation(fields: [authorId], references: [id])
+  authorId    Int
+  description String
+  likes       Int       @default(0)
+  group       Group     @relation(fields: [groupId], references: [id])
+  groupId     Int
+  comments    Comment[] 
+  images Image[]
+}
+
+model Group {
+  id          Int       @id @default(autoincrement())
+  name        String
+  description String
+  cover       Image?    @relation("GroupCover", fields: [coverId], references: [id]) 
+  coverId     Int?      @unique 
+  posts       Post[]
+  members       User[]    @relation("UserToGroup")
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  date        DateTime @default(now())
+  description String
+  post        Post     @relation(fields: [postId], references: [id])
+  postId      Int
+  author      User     @relation(fields: [authorId], references: [id])
+  authorId    Int
+}
