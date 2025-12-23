@@ -21,6 +21,8 @@ model User {
   email            String         @unique
   password         String
   dateOfBirth      DateTime
+  city String
+  country String
   photos           Image[]        @relation("UserGallery")
   profilePicture   Image?         @relation("ProfilePic", fields: [profilePicId], references: [id])
   profilePicId     Int?           @unique 

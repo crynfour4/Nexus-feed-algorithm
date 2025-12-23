@@ -1,23 +1,12 @@
+'use client'
 import type { Metadata } from "next";
-import { Inter, Plus_Jakarta_Sans } from 'next/font/google';
+import { Geist } from "next/font/google";
 import "./globals.css";
+import { HeroUIProvider } from "@heroui/react";
 
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['300'],
-  variable: '--font-inter'
+const geist = Geist({
+  subsets: ["latin"],
 });
-
-const jakarta = Plus_Jakarta_Sans({
-  subsets: ['latin'],
-  weight: ['800'],
-  variable: '--font-jakarta'
-});
-
-export const metadata: Metadata = {
-  title: "Nexus",
-  description: "Starting exploring now",
-};
 
 export default function RootLayout({
   children,
@@ -26,10 +15,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${inter.variable} ${jakarta.variable} antialiased`}
-      >
-        {children}
+      <body className={`${geist.className} antialiased`}>
+        <HeroUIProvider>{children}</HeroUIProvider>
       </body>
     </html>
   );
