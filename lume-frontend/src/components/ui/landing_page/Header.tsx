@@ -2,18 +2,14 @@
 import { SparklesIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { Link } from "react-scroll";
+import BrandIcon from "../general/BrandIcon";
 
 const Header = () => {
   const router = useRouter();
 
   return (
     <div className="flex flex-row justify-between items-center py-4 px-7 bg-current w-full h-1/12 fixed border border-b-zinc-900 z-10">
-      <div className="flex flex-row gap-3 items-center pr-23">
-        <span className="bg-indigo-500 rounded-lg p-1">
-          <SparklesIcon className="text-white size-7" />
-        </span>
-        <p className="text-white font-semibold text-2xl">Lume</p>
-      </div>
+      <BrandIcon/>
       <div className="flex flex-row gap-6">
         <Link
           to="features"
